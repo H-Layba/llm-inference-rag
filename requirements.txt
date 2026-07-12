@@ -3,6 +3,7 @@ sentence-transformers
 faiss-cpu
 huggingface_hub
 gradio
+streamlit
 pandas
 numpy
 requests
