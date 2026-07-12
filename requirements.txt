@@ -1,0 +1,8 @@
+pymupdf
+sentence-transformers
+faiss-cpu
+huggingface_hub
+gradio
+pandas
+numpy
+requests

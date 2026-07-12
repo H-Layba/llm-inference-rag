@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+data/raw_pdfs/*.pdf
+data/chunks.json
+data/chunks_meta.json
+data/faiss.index
+.DS_Store

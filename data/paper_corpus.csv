@@ -1,0 +1,33 @@
+title,arxiv_id,category,pdf_url,downloaded
+Taming the Titans: A Survey of Efficient LLM Inference Serving,2504.19720,survey,https://arxiv.org/pdf/2504.19720,no
+A Survey of Low-bit Large Language Models: Basics Systems and Algorithms,2409.16694,survey,https://arxiv.org/pdf/2409.16694,no
+A Survey of Quantization Methods for Efficient Neural Network Inference,2103.13630,survey,https://arxiv.org/pdf/2103.13630,no
+LLM Inference Unveiled: Survey and Roofline Model Insights,2402.16363,survey,https://arxiv.org/pdf/2402.16363,no
+Unlocking Efficiency in LLM Inference: A Comprehensive Survey of Speculative Decoding,2401.07851,survey,https://arxiv.org/pdf/2401.07851,no
+GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers,2210.17323,quantization,https://arxiv.org/pdf/2210.17323,no
+AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration,2306.00978,quantization,https://arxiv.org/pdf/2306.00978,no
+SmoothQuant: Accurate and Efficient Post-Training Quantization for LLMs,2211.10438,quantization,https://arxiv.org/pdf/2211.10438,no
+QLoRA: Efficient Finetuning of Quantized LLMs,2305.14314,quantization,https://arxiv.org/pdf/2305.14314,no
+SpQR: A Sparse-Quantized Representation for Near-Lossless LLM Weight Compression,2306.03078,quantization,https://arxiv.org/pdf/2306.03078,no
+QuaRot: Outlier-Free 4-bit Inference in Rotated LLMs,2404.00456,quantization,https://arxiv.org/pdf/2404.00456,no
+ZeroQuant(4+2): Redefining LLMs Quantization with FP6-Centric Strategy,2312.08583,quantization,https://arxiv.org/pdf/2312.08583,no
+The Case for 4-bit Precision: k-bit Inference Scaling Laws,2212.09720,quantization,https://arxiv.org/pdf/2212.09720,no
+QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving,2405.04532,quantization,https://arxiv.org/pdf/2405.04532,no
+SpinQuant: LLM Quantization with Learned Rotations,2405.16406,quantization,https://arxiv.org/pdf/2405.16406,no
+FlatQuant: Flatness Matters for LLM Quantization,2410.09426,quantization,https://arxiv.org/pdf/2410.09426,no
+PrefixQuant: Eliminating Outliers by Prefixed Tokens for LLM Quantization,2410.05265,quantization,https://arxiv.org/pdf/2410.05265,no
+LLM-QAT: Data-Free Quantization Aware Training for Large Language Models,2305.17888,quantization,https://arxiv.org/pdf/2305.17888,no
+Efficient Memory Management for LLM Serving with PagedAttention (vLLM),2309.06180,kv_cache,https://arxiv.org/pdf/2309.06180,no
+LayerKV: Optimizing LLM Serving with Layer-wise KV Cache Management,2410.00428,kv_cache,https://arxiv.org/pdf/2410.00428,no
+Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs,2310.01801,kv_cache,https://arxiv.org/pdf/2310.01801,no
+CacheBlend: Fast LLM Serving for RAG with Cached Knowledge Fusion,2405.16444,kv_cache,https://arxiv.org/pdf/2405.16444,no
+KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache,2402.02750,kv_cache,https://arxiv.org/pdf/2402.02750,no
+KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization,2401.18079,kv_cache,https://arxiv.org/pdf/2401.18079,no
+Fast Inference from Transformers via Speculative Decoding,2211.17192,speculative_decoding,https://arxiv.org/pdf/2211.17192,no
+Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads,2401.10774,speculative_decoding,https://arxiv.org/pdf/2401.10774,no
+EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty,2401.15077,speculative_decoding,https://arxiv.org/pdf/2401.15077,no
+EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees,2406.16858,speculative_decoding,https://arxiv.org/pdf/2406.16858,no
+SpecInfer: Accelerating LLM Serving with Tree-based Speculative Inference,2305.09781,speculative_decoding,https://arxiv.org/pdf/2305.09781,no
+Accelerating Large Language Model Decoding with Speculative Sampling,2302.01318,speculative_decoding,https://arxiv.org/pdf/2302.01318,no
+Break the Sequential Dependency of LLM Inference (Lookahead Decoding),2402.02057,speculative_decoding,https://arxiv.org/pdf/2402.02057,no
+Online Speculative Decoding,2310.07177,speculative_decoding,https://arxiv.org/pdf/2310.07177,no
