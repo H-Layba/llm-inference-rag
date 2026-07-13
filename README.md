@@ -27,7 +27,7 @@ PDFs (arXiv) → PyMuPDF extraction → section-aware chunking → strip referen
                                                                     ↓
 User question → embed → retrieve top-k chunks → Qwen2.5-7B-Instruct (HF Inference API)
                                                                     ↓
-                                                    grounded answer + cited sources
+                                                    grounded answer using cited sources
 ```
 
 ## Engineering decisions worth knowing about
@@ -51,15 +51,15 @@ User question → embed → retrieve top-k chunks → Qwen2.5-7B-Instruct (HF In
 data/
   paper_corpus.csv     # source-of-truth list of all papers (title, arxiv_id, category, pdf_url)
   raw_pdfs/             # downloaded PDFs (gitignored, not committed — see setup below)
-  faiss.index            # built vector index (committed, needed for deployment)
+  faiss.index           # built vector index (committed and for deployment)
   chunks_meta.json       # chunk metadata (committed, needed for deployment)
 src/
-  ingest.py             # PDF -> section-aware chunks -> data/chunks.json
-  build_index.py        # chunks -> embeddings -> FAISS index
-  rag_pipeline.py        # retrieval + generation logic
+  ingest.py             # PDF -> chunks - per section -> data/chunks.json
+  build_index.py        # Chunks -> Embeddings -> FAISS index.
+  rag_pipeline.py        # retrieval + generation logic.
 scripts/
-  download_papers.py    # downloads all papers listed in paper_corpus.csv
-streamlit_app.py          # Streamlit UI (deployed version — see Deployment below)
+  download_papers.py    # used to download all papers stored in the paper_corpus.csv.
+streamlit_app.py         # (streamlit UI / deployed version — see Deployment below)
 app.py                   # Gradio UI (local-only alternative)
 .streamlit/config.toml    # custom dark theme for the Streamlit UI
 ```
@@ -67,7 +67,7 @@ app.py                   # Gradio UI (local-only alternative)
 ## Setup (local)
 
 ```bash
-pip install -r requirements.txt
+pip install –r requirements.txt
 
 # 1. Download papers (or place your own PDFs, named <arxiv_id>.pdf, in data/raw_pdfs/)
 python scripts/download_papers.py
@@ -75,15 +75,15 @@ python scripts/download_papers.py
 # 2. Extract + chunk
 python src/ingest.py
 
-# 3. Build the vector index
+# 3. Compiles the vector index
 python src/build_index.py
 
-# 4. Set your Hugging Face token
-cp .env.example .env   # then edit .env with your token
+# 4. Place your Hugging Face token
+cp .env.example .env  #then edit .env using your token
 export HF_TOKEN=your_token_here     # Windows PowerShell: $env:HF_TOKEN = "your_token_here"
 
 # 5. Run the app
-streamlit run streamlit_app.py      # or: python app.py (Gradio, local only)
+streamlit run streamlit_app.py      # or python app.py (Gradio, only on local machine)
 ```
 
 ## Deployment
@@ -103,10 +103,10 @@ this GitHub repo:
 
 Not all models are permanently available on Hugging Face's free serverless
 Inference API and the availability of models varies. This project aimed to
-deploy Mistral-7B-Instruct but ended up addressing issues related to availability
+deploy `Mistral-7B-Instruct` but ended up addressing issues related to availability
 and provider-routing on the free tier launched by Mistral AI and thus proceeds 
-with Qwen2.5-7B-Instruct instead. If your fork of this project combined with the 
-model you've specified in src/rag_pipeline.py doesn't work, make sure to check the
+with `Qwen2.5-7B-Instruct` instead. If your fork of this project combined with the 
+model you've specified in `src/rag_pipeline.py` doesn't work, make sure to check the
 status of a candidate model's page on huggingface.co under the "Inference Providers"
 section before installing it.
 
@@ -120,7 +120,7 @@ arXiv.
 
 ## Known limitations
 
-- Corpus is intentionally narrow, limited to ~30 papers (one subfield) —
+- Corpus is intentionally narrow, limited to ~30 papers —
   this is a demonstrative, not a full literature database.
 - Not all paper layouts provide a perfect heuristic (font-size-based) section
   detection.
