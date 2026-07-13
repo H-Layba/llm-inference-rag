@@ -5,7 +5,7 @@ arXiv papers on efficient LLM inference — quantization, KV-cache
 optimization, and speculative decoding. Answers are grounded strictly in the
 retrieved paper excerpts, with sources shown alongside every answer.
 
-**Live demo:** _[add your Hugging Face Space link here once deployed]_
+**Live demo:** https://llm-inference-rag-kzkn44ma7w4ki2hiujnqjy.streamlit.app/
 
 ## Why this project
 
@@ -24,7 +24,7 @@ PDFs (arXiv) → PyMuPDF extraction → section-aware chunking → strip referen
                                                                     ↓
                                                             FAISS vector index
                                                                     ↓
-User question → embed → retrieve top-k chunks → Mistral-7B-Instruct (HF Inference API)
+User question → embed → retrieve top-k chunks → Qwen2.5-7B-Instruct (HF Inference API)
                                                                     ↓
                                                     grounded answer + cited sources
 ```
@@ -45,26 +45,32 @@ User question → embed → retrieve top-k chunks → Mistral-7B-Instruct (HF In
 - **Every chunk carries metadata** (paper title, arXiv ID, section, category)
   so answers can cite their source, and retrieval can later be filtered by
   category (quantization / kv_cache / speculative_decoding / survey).
-- **Fully free/open-source stack.** Mistral-7B-Instruct via the Hugging Face
+- **Fully free/open-source stack.** Qwen2.5-7B-Instruct via the Hugging Face
   Inference API, sentence-transformers for embeddings, FAISS for vector
-  search — no paid API dependency.
+  search — no paid API dependency. (Note: the specific model was chosen
+  based on live availability on HF's free serverless tier at deployment
+  time — see "A note on the free LLM tier" below.)
 
 ## Project structure
 
 ```
 data/
   paper_corpus.csv     # source-of-truth list of all papers (title, arxiv_id, category, pdf_url)
-  raw_pdfs/             # downloaded PDFs (gitignored — see setup below)
+  raw_pdfs/             # downloaded PDFs (gitignored, not committed — see setup below)
+  faiss.index            # built vector index (committed, needed for deployment)
+  chunks_meta.json       # chunk metadata (committed, needed for deployment)
 src/
   ingest.py             # PDF -> section-aware chunks -> data/chunks.json
   build_index.py        # chunks -> embeddings -> FAISS index
   rag_pipeline.py        # retrieval + generation logic
 scripts/
   download_papers.py    # downloads all papers listed in paper_corpus.csv
-app.py                   # Gradio UI (local + Hugging Face Spaces entry point)
+streamlit_app.py          # Streamlit UI (deployed version — see Deployment below)
+app.py                   # Gradio UI (local-only alternative)
+.streamlit/config.toml    # custom dark theme for the Streamlit UI
 ```
 
-## Setup
+## Setup (local)
 
 ```bash
 pip install -r requirements.txt
@@ -80,11 +86,41 @@ python src/build_index.py
 
 # 4. Set your Hugging Face token
 cp .env.example .env   # then edit .env with your token
-export HF_TOKEN=your_token_here
+export HF_TOKEN=your_token_here     # Windows PowerShell: $env:HF_TOKEN = "your_token_here"
 
 # 5. Run the app
-python app.py
+streamlit run streamlit_app.py      # or: python app.py (Gradio, local only)
 ```
+
+## Deployment
+
+Deployed on **Streamlit Community Cloud** (free tier), connected directly to
+this GitHub repo:
+
+1. Push the repo to GitHub, including the pre-built `data/faiss.index` and
+   `data/chunks_meta.json` (Streamlit Cloud doesn't rebuild these — the app
+   loads them directly at runtime)
+2. On [share.streamlit.io](https://share.streamlit.io), create a new app
+   pointing at this repo, branch `main`, main file `streamlit_app.py`
+3. Add `HF_TOKEN` under the app's Secrets (TOML format:
+   `HF_TOKEN = "your_token"`)
+4. Deploy
+
+### A note on the free LLM tier
+
+Hugging Face's free serverless Inference API doesn't host every model at all
+times, and which models are available can change. This project originally
+targeted Mistral-7B-Instruct but switched to Qwen2.5-7B-Instruct after
+hitting availability/provider-routing errors on the free tier during
+deployment. If you fork this project and the configured model in
+`src/rag_pipeline.py` stops working, check a candidate model's page on
+huggingface.co for its "Inference Providers" status before swapping it in.
+
+Separately, Hugging Face Spaces' free tier no longer reliably supports the
+Gradio SDK at the time of writing (new Spaces are steered toward paid tiers
+or ZeroGPU hardware) — this is why the deployed version uses Streamlit
+Community Cloud instead. `app.py` (Gradio) is kept in the repo as a local
+alternative UI.
 
 ## Data provenance
 
