@@ -1,19 +1,20 @@
-# Efficient LLM Inference — Research Assistant (RAG)
+# Efficient LLM Inference - Research Assistant (RAG)
 
-A retrieval-augmented generation system for querying a curated corpus of ~30
-arXiv papers on efficient LLM inference — quantization, KV-cache
-optimization, and speculative decoding. Answers are grounded strictly in the
-retrieved paper excerpts, with sources shown alongside every answer.
+A retrieval-augmentated generation system for querying a curated repository
+of ~30 arXiv papers on LLM inference — quantization, KV-cache optimization, 
+and speculative decoding. Answers are based exclusively on the information in
+the papers retrieved and the sources are listed with each answer.
 
 **Live demo:** https://llm-inference-rag-kzkn44ma7w4ki2hiujnqjy.streamlit.app/
 
 ## Why this project
 
-General-purpose search or asking an LLM directly gives you scattered
-pointers or ungrounded (sometimes hallucinated) summaries. This system
-retrieves the actual relevant passages from a fixed set of papers first,
-then generates an answer constrained to that context — so answers are
-traceable back to a specific paper and section.
+General purpose search or asking the LLM directly gives scattered
+pointers or ungrounded (sometimes hallucinated) summaries. The system
+fetches the actual relevant passage from a fixed set of documents first,
+then formulate an answer that is limited to this context – the answers 
+can be traced back to a specific document and the specific context.
+
 
 ## Architecture
 
@@ -31,25 +32,18 @@ User question → embed → retrieve top-k chunks → Qwen2.5-7B-Instruct (HF In
 
 ## Engineering decisions worth knowing about
 
-- **PDF parsing: PyMuPDF, not GROBID.** GROBID gives more reliable section
-  detection for scientific papers but requires running a separate Java
-  service. For a ~30-paper corpus, PyMuPDF with font-size-based header
-  heuristics was a better time/quality tradeoff. This is the natural first
-  upgrade if the corpus grows.
-- **Section-aware chunking.** Naive fixed-length chunking cuts through
-  equations, tables, and section boundaries, which hurts retrieval quality
-  on dense technical text. Chunks here are built to respect detected section
-  boundaries (Abstract, Introduction, Method, etc.) where possible.
-- **References are stripped before chunking.** Bibliography entries are pure
-  noise for retrieval and would otherwise pollute the vector index.
-- **Every chunk carries metadata** (paper title, arXiv ID, section, category)
-  so answers can cite their source, and retrieval can later be filtered by
-  category (quantization / kv_cache / speculative_decoding / survey).
+- **Section-aware chunking.** Naive fixed-length chunks are generated in
+  equations, tables, and section boundaries; impacts retrieval qualities for
+  dense technical texts. Where possible chunks are created which preserve
+  recognized section boundaries, such as Abstract, Introduction, Method, etc.
+- **References are removed prior to chunking** Each bibliographic entry is no
+  use in retrieval and would pollute the vector index.
+- **Each chunk carries metadata** (paper title, arXiv ID, section, category)
+  so that an answer can refer to where it was retrieved from; and retrieval
+  could be specialized by category: (quantiation / kv_cache / speculative_decoding / survey).
 - **Fully free/open-source stack.** Qwen2.5-7B-Instruct via the Hugging Face
-  Inference API, sentence-transformers for embeddings, FAISS for vector
-  search — no paid API dependency. (Note: the specific model was chosen
-  based on live availability on HF's free serverless tier at deployment
-  time — see "A note on the free LLM tier" below.)
+   Inference API, sentence-transformers for embeddings and FAISS for vector
+   search.
 
 ## Project structure
 
@@ -94,12 +88,11 @@ streamlit run streamlit_app.py      # or: python app.py (Gradio, local only)
 
 ## Deployment
 
-Deployed on **Streamlit Community Cloud** (free tier), connected directly to
+Deployed on **Streamlit Community Cloud**, connected directly to
 this GitHub repo:
 
 1. Push the repo to GitHub, including the pre-built `data/faiss.index` and
-   `data/chunks_meta.json` (Streamlit Cloud doesn't rebuild these — the app
-   loads them directly at runtime)
+   `data/chunks_meta.json`
 2. On [share.streamlit.io](https://share.streamlit.io), create a new app
    pointing at this repo, branch `main`, main file `streamlit_app.py`
 3. Add `HF_TOKEN` under the app's Secrets (TOML format:
@@ -108,45 +101,27 @@ this GitHub repo:
 
 ### A note on the free LLM tier
 
-Hugging Face's free serverless Inference API doesn't host every model at all
-times, and which models are available can change. This project originally
-targeted Mistral-7B-Instruct but switched to Qwen2.5-7B-Instruct after
-hitting availability/provider-routing errors on the free tier during
-deployment. If you fork this project and the configured model in
-`src/rag_pipeline.py` stops working, check a candidate model's page on
-huggingface.co for its "Inference Providers" status before swapping it in.
+Not all models are permanently available on Hugging Face's free serverless
+Inference API and the availability of models varies. This project aimed to
+deploy Mistral-7B-Instruct but ended up addressing issues related to availability
+and provider-routing on the free tier launched by Mistral AI and thus proceeds 
+with Qwen2.5-7B-Instruct instead. If your fork of this project combined with the 
+model you've specified in src/rag_pipeline.py doesn't work, make sure to check the
+status of a candidate model's page on huggingface.co under the "Inference Providers"
+section before installing it.
 
-Separately, Hugging Face Spaces' free tier no longer reliably supports the
-Gradio SDK at the time of writing (new Spaces are steered toward paid tiers
-or ZeroGPU hardware) — this is why the deployed version uses Streamlit
-Community Cloud instead. `app.py` (Gradio) is kept in the repo as a local
-alternative UI.
 
 ## Data provenance
 
-All papers are sourced from arXiv and listed with their original arXiv ID
-and PDF link in `data/paper_corpus.csv`. Raw PDFs are not committed to this
-repo — run `scripts/download_papers.py` to fetch them directly from arXiv.
+All papers can be found on arXiv; you can find their original arXiv ID and
+pdf link in `data/paper_corpus.csv`. The PDFs contained in this repo are NOT
+raw PDFs – use `scripts/download_papers.py` to obtain raw PDFs directly from
+arXiv.
 
 ## Known limitations
 
-- Corpus is intentionally narrow (~30 papers, one subfield) — this is a
-  focused demo, not a comprehensive literature database.
-- Section detection is heuristic (font-size based) and not perfect on all
-  paper layouts.
-- Answers are only as good as retrieval — if a question falls outside the
-  corpus's coverage, the model is instructed to say so rather than guess,
-  but this isn't foolproof.
-- **Grounding is prompt-enforced, not hard-constrained.** In testing, the
-  model sometimes correctly notes the context doesn't cover a question, then
-  supplements with general knowledge anyway (e.g. answering "What's the
-  capital of France?" after noting it wasn't in the corpus). This is an
-  accepted tradeoff for this demo — it keeps answers useful rather than
-  uselessly blank — but means grounding isn't strictly guaranteed the way a
-  hard-filtered RAG system would enforce it.
+- Corpus is intentionally narrow, limited to ~30 papers (one subfield) —
+  this is a demonstrative, not a full literature database.
+- Not all paper layouts provide a perfect heuristic (font-size-based) section
+  detection.
 
-## Future improvements
-
-- Swap PyMuPDF for GROBID for more reliable structural parsing at scale
-- Add category-filtered retrieval (e.g., "only search quantization papers")
-- Expand corpus and add incremental re-indexing
