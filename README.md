@@ -7,8 +7,8 @@ the papers retrieved and the sources are listed with each answer.
 
 **Live demo:** https://llm-inference-rag-kzkn44ma7w4ki2hiujnqjy.streamlit.app/
 
-<img width="957" height="882" alt="Screenshot 2026-07-15 221204" src="https://github.com/user-attachments/assets/f792a87c-2d97-4b91-8fcd-985c764387b3" />
-<img width="966" height="886" alt="image" src="https://github.com/user-attachments/assets/bb311a54-2e2d-4645-89fd-1e34ae0f2f14" />
+<img width="700" height="500" alt="Screenshot 2026-07-15 221204" src="https://github.com/user-attachments/assets/f792a87c-2d97-4b91-8fcd-985c764387b3" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/bb311a54-2e2d-4645-89fd-1e34ae0f2f14" />
 
 ## Why this project
 
