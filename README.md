@@ -6,9 +6,8 @@ and speculative decoding. Answers are based exclusively on the information in
 the papers retrieved and the sources are listed with each answer.
 
 **Live demo:** https://llm-inference-rag-kzkn44ma7w4ki2hiujnqjy.streamlit.app/
-
-<img width="950" height="780" alt="Screenshot 2026-07-15 221204" src="https://github.com/user-attachments/assets/f792a87c-2d97-4b91-8fcd-985c764387b3" />
-<img width="950" height="780" alt="image" src="https://github.com/user-attachments/assets/bb311a54-2e2d-4645-89fd-1e34ae0f2f14" />
+<img width="1891" height="917" alt="image" src="https://github.com/user-attachments/assets/00c4ab7f-85b2-4b15-b254-73eb2432d13a" />
+<img width="1906" height="908" alt="image" src="https://github.com/user-attachments/assets/2b76a885-9f76-415a-95cb-6bbf5fe5b044" />
 
 ## Why this project
 
